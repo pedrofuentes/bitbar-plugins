@@ -65,12 +65,12 @@ fetch(`${config.api.endpoint}/api/v1/incidents?${config.api.query}`, {
     Authorization: `Token token=${config.api.token}`,
   },
 })
-.then((res) => res.json())
-.then((json) => {
+.then(res => res.json())
+.then(json => {
   // Group incidents by Service
   const serviceIncidents = [];
 
-  json.incidents.forEach((incident) => {
+  json.incidents.forEach(incident => {
     if (!serviceIncidents[incident.service.id]) {
       serviceIncidents[incident.service.id] = {
         name: incident.service.name,
@@ -87,7 +87,7 @@ fetch(`${config.api.endpoint}/api/v1/incidents?${config.api.query}`, {
     total: json.incidents.length,
   };
 })
-.then((obj) => {
+.then(obj => {
   const json = [];
   const serviceIncidents = obj.serviceIncidents;
 
@@ -103,10 +103,10 @@ fetch(`${config.api.endpoint}/api/v1/incidents?${config.api.query}`, {
     for (let prop in serviceIncidents) {
       const incidents = [];
 
-      serviceIncidents[prop].incidents.forEach((incident) => {
+      serviceIncidents[prop].incidents.forEach(incident => {
         const assignedTo = [];
 
-        incident.assigned_to.forEach((user) => {
+        incident.assigned_to.forEach(user => {
           assignedTo.push({
             text: `${user.object.name}, ${ta.ago(new Date(Date.parse(user.at)))}`,
             href: user.object.html_url,
