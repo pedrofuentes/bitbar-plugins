@@ -1,0 +1,28 @@
+{
+  "name": "my-bitbar-plugins",
+  "version": "1.0.0",
+  "description": "BitBar Plugins",
+  "author": "Pedro Fuentes <git@pedrofuent.es>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/PedroFuentes/my-bitbar-plugins"
+  },
+  "bugs": {
+    "url": "https://github.com/PedroFuentes/my-bitbar-plugins/issues"
+  },
+  "keywords": [
+    "bitbar",
+    "pagerduty"
+  ],
+  "dependencies": {
+    "bitbar": "^0.3.0",
+    "node-fetch": "^1.5.2",
+    "time-ago": "^0.1.0"
+  },
+  "devDependencies": {
+    "eslint": "^2.6.0",
+    "eslint-config-airbnb": "^6.0.2",
+    "eslint-plugin-react": "^4.1.0"
+  },
+  "license": "MIT"
+}
