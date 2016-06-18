@@ -1,13 +1,13 @@
 #!/usr/bin/env /usr/local/bin/node
 /*
 <bitbar.title>PagerDuty Incidents</bitbar.title>
-<bitbar.version>v1.0.0</bitbar.version>
+<bitbar.version>v0.1.0</bitbar.version>
 <bitbar.author>Pedro Pablo Fuentes Schuster</bitbar.author>
 <bitbar.author.github>pedrofuentes</bitbar.author.github>
 <bitbar.desc>Show all active incidents for an account</bitbar.desc>
 <bitbar.image></bitbar.image>
-<bitbar.dependencies>node, npm/node-fetch, npm/time-ago</bitbar.dependencies>
-<bitbar.abouturl>http://pedrofuent.es/</bitbar.abouturl>
+<bitbar.dependencies>node, npm/node-fetch, npm/time-ago, npm/bitbar</bitbar.dependencies>
+<bitbar.abouturl>https://github.com/PedroFuentes/my-bitbar-plugins/</bitbar.abouturl>
 */
 'use strict';
 const fetch = require('node-fetch');
