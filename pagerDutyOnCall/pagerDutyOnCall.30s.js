@@ -13,9 +13,9 @@
 const fetch = require('node-fetch');
 const ta = require('time-ago')();
 
-var cfg = require('home-config').load('.bitbarrc');
+const cfg = require('home-config').load('.bitbarrc');
 
-if(!cfg.pagerdutyoncall['api.endpoint'] || !cfg.pagerdutyoncall['api.token']) {
+if (!cfg.pagerdutyoncall['api.endpoint'] || !cfg.pagerdutyoncall['api.token']) {
   console.log('Config Needed|dropdown=false');
   console.log('---');
   console.log('Add to your .bitbarrc config file on your|');
@@ -45,52 +45,51 @@ const config = {
 };
 
 fetch(`${config.api.endpoint}/api/v1/escalation_policies/on_call?limit=100&query=${config.api.query}`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Token token=${config.api.token}`,
-    },
-  }).then(function(res) {
-    return res.json();
-  }).then(function(json) {
-    let escalations = '';
-    let activeIncident = false;
-    
-    json.escalation_policies.forEach(function(escalation) {
-      let activeServiceIncident = false;
-      let services = '';
-      let activeServices = 0;
+  method: 'GET',
+  headers: {
+    'Content-Type': 'application/json',
+    Authorization: `Token token=${config.api.token}`,
+  },
+})
+.then(res => res.json())
+.then(json => {
+  let escalations = '';
+  let activeIncident = false;
 
-      escalation.services.forEach(function(service){
+  json.escalation_policies.forEach(escalation => {
+    let activeServiceIncident = false;
+    let services = '';
+    let activeServices = 0;
 
-        if(service.status !== 'disabled'){
-          activeServices++;
+    escalation.services.forEach(service => {
+      if (service.status !== 'disabled') {
+        activeServices++;
 
-          if(service.status !== 'active') {
-            activeIncident = true;
-            activeServiceIncident = true;
+        if (service.status !== 'active') {
+          activeIncident = true;
+          activeServiceIncident = true;
 
-            services = services.concat(`      ${service.status === 'maintenance' ? ':construction:' : ':bangbang:'} ${cleanName(service.name)}, ${ta.ago(new Date(Date.parse(service.last_incident_timestamp)))}|trim=false color=${service.status === 'critical' ? config.colors.critical : config.colors.warning} href=${config.api.endpoint}${service.service_url}\n`);
-            services = services.concat(`      :page_facing_up: Triggered: ${service.incident_counts.triggered} Acknowledged: ${service.incident_counts.acknowledged}|trim=false alternate=true\n`);
-          }
+          services = services.concat(`      ${service.status === 'maintenance' ? ':construction:' : ':bangbang:'} ${cleanName(service.name)}, ${ta.ago(new Date(Date.parse(service.last_incident_timestamp)))}|trim=false color=${service.status === 'critical' ? config.colors.critical : config.colors.warning} href=${config.api.endpoint}${service.service_url}\n`);
+          services = services.concat(`      :page_facing_up: Triggered: ${service.incident_counts.triggered} Acknowledged: ${service.incident_counts.acknowledged}|trim=false alternate=true\n`);
         }
-      });
-
-      if(activeServices){
-        escalations = escalations.concat(`${activeServiceIncident ? ':sos:' : ':cool:'} ${cleanName(escalation.name)}|href=${config.api.endpoint}/escalation_policies/${escalation.id}\n`);
-        escalation.on_call.forEach(function(onCall) {
-          escalations = escalations.concat(`--${onCall.level}. ${onCall.user.name}|color=#000000 href=${config.api.endpoint}/users/${onCall.user.id}\n`);
-          escalations = escalations.concat(`--${onCall.level}. ${onCall.user.email}|alternate=true\n`);
-        });
-
-        escalations = escalations.concat(services);
-        escalations = escalations.concat('---\n');
       }
     });
-    console.log(`☎|size=10 dropdown=false templateImage=${activeIncident ? config.icon.active : config.icon.inactive}`);
-    console.log('---');
-    console.log(escalations);
+
+    if (activeServices) {
+      escalations = escalations.concat(`${activeServiceIncident ? ':sos:' : ':cool:'} ${cleanName(escalation.name)}|href=${config.api.endpoint}/escalation_policies/${escalation.id}\n`);
+      escalation.on_call.forEach(onCall => {
+        escalations = escalations.concat(`--${onCall.level}. ${onCall.user.name}|color=#000000 href=${config.api.endpoint}/users/${onCall.user.id}\n`);
+        escalations = escalations.concat(`--${onCall.level}. ${onCall.user.email}|alternate=true\n`);
+      });
+
+      escalations = escalations.concat(services);
+      escalations = escalations.concat('---\n');
+    }
   });
+  console.log(`☎|size=10 dropdown=false templateImage=${activeIncident ? config.icon.active : config.icon.inactive}`);
+  console.log('---');
+  console.log(escalations);
+});
 
 function cleanName(name) {
   return name.replace('Getaways - ', '').replace('Getaways', '').trim();
