@@ -59,6 +59,7 @@ const config = {
   },
   style: {
     indentation: '      ',
+    prefix: cfg.pagerdutyoncall['style.prefix'] ? cfg.pagerdutyoncall['style.prefix'] : '',
   },
 };
 
@@ -140,5 +141,5 @@ fetch(`${config.api.endpoint}/api/v1/escalation_policies/on_call?limit=100&query
 });
 
 function cleanName(name) {
-  return name.replace('Getaways - ', '').replace('Getaways', '').trim();
+  return name.replace(`${config.style.prefix} - `, '').replace(config.style.prefix, '').trim();
 }
