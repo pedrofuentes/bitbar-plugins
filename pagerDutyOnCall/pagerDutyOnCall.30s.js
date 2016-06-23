@@ -35,7 +35,9 @@ if (!cfg.pagerdutyoncall['api.endpoint'] || !cfg.pagerdutyoncall['api.token']) {
   }, {
     text: 'api.token={your-token}',
   }, {
-    text: 'api.query={your-filter-query}',
+    text: 'api.query={your-filter-query} *optional',
+  }, {
+    text: 'style.prefix={service-name-prefix} *optional',
   });
 
   bitbar(json);
