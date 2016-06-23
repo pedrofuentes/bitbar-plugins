@@ -1,29 +1,44 @@
 #!/usr/bin/env /usr/local/bin/node
 /*
 <bitbar.title>PagerDuty On-Call</bitbar.title>
-<bitbar.version>v1.0.0</bitbar.version>
+<bitbar.version>v0.1.0</bitbar.version>
 <bitbar.author>Pedro Pablo Fuentes Schuster</bitbar.author>
 <bitbar.author.github>pedrofuentes</bitbar.author.github>
-<bitbar.desc>Show escalation status, users on-call per escalation and services that are on maintainance or with a triggered incident</bitbar.desc>
+<bitbar.desc>Shows escalation status, users on-call per escalation and services that are on maintainance or with a triggered incident</bitbar.desc>
 <bitbar.image></bitbar.image>
-<bitbar.dependencies>node, npm/node-fetch, npm/time-ago</bitbar.dependencies>
+<bitbar.dependencies>node, npm/node-fetch, npm/time-ago, npm/bitbar</bitbar.dependencies>
 <bitbar.abouturl>http://pedrofuent.es/</bitbar.abouturl>
 */
 'use strict';
 const fetch = require('node-fetch');
 const ta = require('time-ago')();
+const bitbar = require('bitbar');
 
 const cfg = require('home-config').load('.bitbarrc');
 
 if (!cfg.pagerdutyoncall['api.endpoint'] || !cfg.pagerdutyoncall['api.token']) {
-  console.log('Config Needed|dropdown=false');
-  console.log('---');
-  console.log('Add to your .bitbarrc config file on your|');
-  console.log('home directory the following information:|');
-  console.log('---');
-  console.log('[pagerdutyoncall]|');
-  console.log('api.endpoint=https://|');
-  console.log('api.token=|');
+  const json = [];
+
+  json.push({
+    text: 'Config Needed',
+    dropdown: false,
+  },
+  bitbar.sep, {
+    text: 'Add to your .bitbarrc config file on your',
+  }, {
+    text: 'home directory the following information:',
+  },
+  bitbar.sep, {
+    text: '[pagerdutyoncall]',
+  }, {
+    text: 'api.endpoint=https://',
+  }, {
+    text: 'api.token={your-token}',
+  }, {
+    text: 'api.query={your-filter-query}',
+  });
+
+  bitbar(json);
   process.exit();
 }
 
@@ -42,8 +57,12 @@ const config = {
     warning: '#999900',
     regularText: '#808080',
   },
+  style: {
+    indentation: '      ',
+  },
 };
 
+// TODO: Add support more than 100 escalations
 fetch(`${config.api.endpoint}/api/v1/escalation_policies/on_call?limit=100&query=${config.api.query}`, {
   method: 'GET',
   headers: {
@@ -53,12 +72,12 @@ fetch(`${config.api.endpoint}/api/v1/escalation_policies/on_call?limit=100&query
 })
 .then(res => res.json())
 .then(json => {
-  let escalations = '';
+  const escalations = [];
   let activeIncident = false;
 
   json.escalation_policies.forEach(escalation => {
     let activeServiceIncident = false;
-    let services = '';
+    const services = [];
     let activeServices = 0;
 
     escalation.services.forEach(service => {
@@ -69,26 +88,55 @@ fetch(`${config.api.endpoint}/api/v1/escalation_policies/on_call?limit=100&query
           activeIncident = true;
           activeServiceIncident = true;
 
-          services = services.concat(`      ${service.status === 'maintenance' ? ':construction:' : ':bangbang:'} ${cleanName(service.name)}, ${ta.ago(new Date(Date.parse(service.last_incident_timestamp)))}|trim=false color=${service.status === 'critical' ? config.colors.critical : config.colors.warning} href=${config.api.endpoint}${service.service_url}\n`);
-          services = services.concat(`      :page_facing_up: Triggered: ${service.incident_counts.triggered} Acknowledged: ${service.incident_counts.acknowledged}|trim=false alternate=true\n`);
+          services.push({
+            text: `${config.style.indentation}${service.status === 'maintenance' ? ':construction:' : ':bangbang:'} ${cleanName(service.name)}, ${ta.ago(new Date(Date.parse(service.last_incident_timestamp)))}`,
+            trim: false,
+            color: service.status === 'critical' ? config.colors.critical : config.colors.warning,
+            href: `${config.api.endpoint}${service.service_url}`,
+          }, {
+            text: `${config.style.indentation}:page_facing_up: Triggered: ${service.incident_counts.triggered} Acknowledged: ${service.incident_counts.acknowledged}`,
+            trim: false,
+            alternate: true,
+          });
         }
       }
     });
 
     if (activeServices) {
-      escalations = escalations.concat(`${activeServiceIncident ? ':sos:' : ':cool:'} ${cleanName(escalation.name)}|href=${config.api.endpoint}/escalation_policies/${escalation.id}\n`);
+      const onCallList = [];
+
       escalation.on_call.forEach(onCall => {
-        escalations = escalations.concat(`--${onCall.level}. ${onCall.user.name}|color=#000000 href=${config.api.endpoint}/users/${onCall.user.id}\n`);
-        escalations = escalations.concat(`--${onCall.level}. ${onCall.user.email}|alternate=true\n`);
+        onCallList.push({
+          text: `${onCall.level}. ${onCall.user.name}`,
+          color: '#000000',
+          href: `${config.api.endpoint}/users/${onCall.user.id}`,
+        }, {
+          text: `${onCall.level}. ${onCall.user.email}`,
+          alternate: true,
+        });
       });
 
-      escalations = escalations.concat(services);
-      escalations = escalations.concat('---\n');
+      escalations.push({
+        text: `${activeServiceIncident ? ':sos:' : ':cool:'} ${cleanName(escalation.name)}`,
+        href: `${config.api.endpoint}/escalation_policies/${escalation.id}`,
+        submenu: onCallList,
+      });
+
+      if (services.length) escalations.push(services[0]);
+
+      escalations.push(bitbar.sep);
     }
   });
-  console.log(`☎|size=10 dropdown=false templateImage=${activeIncident ? config.icon.active : config.icon.inactive}`);
-  console.log('---');
-  console.log(escalations);
+
+  escalations.unshift({
+    text: '☎',
+    dropdown: false,
+    templateImage: activeIncident ? config.icon.active : config.icon.inactive,
+    size: 8,
+  },
+  bitbar.sep);
+
+  bitbar(escalations);
 });
 
 function cleanName(name) {
