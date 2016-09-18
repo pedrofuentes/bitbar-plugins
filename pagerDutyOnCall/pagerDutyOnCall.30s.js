@@ -74,18 +74,18 @@ fetch(`${config.api.endpoint}/api/v1/escalation_policies/on_call?limit=100&query
   },
 })
 .then(res => res.json())
-.then(json => {
+.then((json) => {
   const escalations = [];
   let activeIncident = false;
 
-  json.escalation_policies.forEach(escalation => {
+  json.escalation_policies.forEach((escalation) => {
     let activeServiceIncident = false;
     const services = [];
     let activeServices = 0;
 
-    escalation.services.forEach(service => {
+    escalation.services.forEach((service) => {
       if (service.status !== 'disabled') {
-        activeServices++;
+        activeServices += 1;
 
         if (service.status !== 'active') {
           activeIncident = true;
@@ -108,7 +108,7 @@ fetch(`${config.api.endpoint}/api/v1/escalation_policies/on_call?limit=100&query
     if (activeServices) {
       const onCallList = [];
 
-      escalation.on_call.forEach(onCall => {
+      escalation.on_call.forEach((onCall) => {
         onCallList.push({
           text: `${onCall.level}. ${onCall.user.name}`,
           color: '#000000',
