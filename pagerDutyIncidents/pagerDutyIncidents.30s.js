@@ -100,7 +100,7 @@ fetch(`${config.api.endpoint}/api/v1/incidents?${config.api.query}`, {
   bitbar.sep);
 
   if (Object.keys(serviceIncidents).length) {
-    for (const prop in serviceIncidents) {
+    Object.keys(serviceIncidents).forEach((prop) => {
       const incidents = [];
 
       serviceIncidents[prop].incidents.forEach((incident) => {
@@ -153,7 +153,7 @@ fetch(`${config.api.endpoint}/api/v1/incidents?${config.api.query}`, {
         submenu: incidents,
       },
       bitbar.sep);
-    }
+    });
   } else {
     json.push({
       text: 'No Open Incidents',
