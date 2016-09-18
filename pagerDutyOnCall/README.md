@@ -1,5 +1,5 @@
 #PagerDuty On Call
-Shows who is on call for all the active Escalation Policies and what services have active incidents.
+Shows who is on call for all the active Escalation Policies and what services have active incidents. If you click on a service, incident or user it will take you to the corresponding PagerDuty page. If you hit the alt key while you are on the plugin you will get some extra information.
 
 ## Installation
 ### Prerequisites

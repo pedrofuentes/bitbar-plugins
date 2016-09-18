@@ -1,5 +1,5 @@
 #PagerDuty Incidents
-Shows all the active incidents grouped by Service.
+Shows all the active incidents grouped by Service. If you click on a service, incident or user it will take you to the corresponding PagerDuty page. If you hit the alt key while you are on the plugin you will get some extra information.
 
 ![PagerDuty Incidents Screenshot](https://github.com/PedroFuentes/bitbar-plugins/blob/master/images/PagerDutyIncidents_Screenshot.png)
 
