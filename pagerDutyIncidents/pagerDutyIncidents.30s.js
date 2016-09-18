@@ -5,7 +5,7 @@
 <bitbar.author>Pedro Pablo Fuentes Schuster</bitbar.author>
 <bitbar.author.github>pedrofuentes</bitbar.author.github>
 <bitbar.desc>Shows all the active incidents grouped by Service.</bitbar.desc>
-<bitbar.image></bitbar.image>
+<bitbar.image>https://github.com/PedroFuentes/bitbar-plugins/blob/master/images/PagerDutyIncidents_Screenshot.png</bitbar.image>
 <bitbar.dependencies>node, npm/node-fetch, npm/time-ago, npm/bitbar, node/home-config</bitbar.dependencies>
 <bitbar.abouturl>https://github.com/PedroFuentes/bitbar-plugins/tree/master/pagerDutyIncidents</bitbar.abouturl>
 */

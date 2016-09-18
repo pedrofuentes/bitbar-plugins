@@ -1,6 +1,8 @@
 #PagerDuty Incidents
 Shows all the active incidents grouped by Service.
 
+![PagerDuty Incidents Screenshot](https://github.com/PedroFuentes/bitbar-plugins/blob/master/images/PagerDutyIncidents_Screenshot.png)
+
 ## Installation
 ### Prerequisites
 For the plugin to work you first need a [PagerDuty API key](https://support.pagerduty.com/hc/en-us/articles/202829310-Generating-an-API-Key).
