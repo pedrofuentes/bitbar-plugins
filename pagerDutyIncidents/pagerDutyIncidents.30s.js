@@ -4,10 +4,10 @@
 <bitbar.version>v0.1.0</bitbar.version>
 <bitbar.author>Pedro Pablo Fuentes Schuster</bitbar.author>
 <bitbar.author.github>pedrofuentes</bitbar.author.github>
-<bitbar.desc>Show all active incidents for an account</bitbar.desc>
+<bitbar.desc>Shows all the active incidents grouped by Service.</bitbar.desc>
 <bitbar.image></bitbar.image>
 <bitbar.dependencies>node, npm/node-fetch, npm/time-ago, npm/bitbar</bitbar.dependencies>
-<bitbar.abouturl>https://github.com/PedroFuentes/my-bitbar-plugins/</bitbar.abouturl>
+<bitbar.abouturl>https://github.com/PedroFuentes/bitbar-plugins/</bitbar.abouturl>
 */
 'use strict';
 const fetch = require('node-fetch');

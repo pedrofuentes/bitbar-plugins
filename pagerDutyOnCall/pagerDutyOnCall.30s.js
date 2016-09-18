@@ -4,10 +4,10 @@
 <bitbar.version>v0.1.0</bitbar.version>
 <bitbar.author>Pedro Pablo Fuentes Schuster</bitbar.author>
 <bitbar.author.github>pedrofuentes</bitbar.author.github>
-<bitbar.desc>Shows escalation status, users on-call per escalation and services that are on maintainance or with a triggered incident</bitbar.desc>
+<bitbar.desc>Shows who is on call for all the active Escalation Policies and what services have active incidents.</bitbar.desc>
 <bitbar.image></bitbar.image>
 <bitbar.dependencies>node, npm/node-fetch, npm/time-ago, npm/bitbar</bitbar.dependencies>
-<bitbar.abouturl>http://pedrofuent.es/</bitbar.abouturl>
+<bitbar.abouturl>https://github.com/PedroFuentes/bitbar-plugins/</bitbar.abouturl>
 */
 'use strict';
 const fetch = require('node-fetch');
