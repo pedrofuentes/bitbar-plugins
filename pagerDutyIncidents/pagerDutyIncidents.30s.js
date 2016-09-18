@@ -7,7 +7,7 @@
 <bitbar.desc>Shows all the active incidents grouped by Service.</bitbar.desc>
 <bitbar.image></bitbar.image>
 <bitbar.dependencies>node, npm/node-fetch, npm/time-ago, npm/bitbar</bitbar.dependencies>
-<bitbar.abouturl>https://github.com/PedroFuentes/bitbar-plugins/</bitbar.abouturl>
+<bitbar.abouturl>https://github.com/PedroFuentes/bitbar-plugins/tree/master/pagerDutyIncidents</bitbar.abouturl>
 */
 'use strict';
 const fetch = require('node-fetch');
