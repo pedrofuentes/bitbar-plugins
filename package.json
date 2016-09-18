@@ -16,13 +16,16 @@
   ],
   "dependencies": {
     "bitbar": "^0.3.0",
+    "home-config": "^0.1.0",
     "node-fetch": "^1.5.2",
     "time-ago": "^0.1.0"
   },
   "devDependencies": {
-    "eslint": "^2.6.0",
-    "eslint-config-airbnb": "^6.0.2",
-    "eslint-plugin-react": "^4.1.0"
+    "eslint": "^3.5.0",
+    "eslint-config-airbnb": "^11.1.0",
+    "eslint-plugin-import": "^1.15.0",
+    "eslint-plugin-jsx-a11y": "^2.2.2",
+    "eslint-plugin-react": "^6.2.2"
   },
   "license": "MIT"
 }
