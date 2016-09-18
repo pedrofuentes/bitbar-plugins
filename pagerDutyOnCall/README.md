@@ -1,6 +1,8 @@
 #PagerDuty On Call
 Shows who is on call for all the active Escalation Policies and what services have active incidents. If you click on a service, incident or user it will take you to the corresponding PagerDuty page. If you hit the alt key while you are on the plugin you will get some extra information.
 
+![PagerDuty On Call Screenshot](https://github.com/PedroFuentes/bitbar-plugins/blob/master/images/PagerDutyOnCall_Screenshot.png)
+
 ## Installation
 ### Prerequisites
 For the plugin to work you first need a [PagerDuty API key](https://support.pagerduty.com/hc/en-us/articles/202829310-Generating-an-API-Key).
