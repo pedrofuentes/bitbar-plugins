@@ -12,31 +12,31 @@ For the plugin to work you first need a [PagerDuty API key](https://support.page
 
 3. Ensure you the plugin has execution rights
 
-```console
-chmod +x pagerDutyOnCall.30s.js
-```
+ ```console
+ chmod +x pagerDutyOnCall.30s.js
+ ```
 
 4. Install the required npm dependencies, if you don't have Node.js installed follow [this installation guide](https://docs.npmjs.com/getting-started/installing-node) and after you are done with the installation open your terminal, go to your BitBar plugins folder and then type
 
-```console
-npm install bitbar@^0.3.0 home-config@^0.1.0 node-fetch@^1.5.2 time-ago@^0.1.0
-```
+ ```console
+ npm install bitbar@^0.3.0 home-config@^0.1.0 node-fetch@^1.5.2 time-ago@^0.1.0
+ ```
 
 5. Create the required configuration file on your home directory
 
-```console
-nano ~/.bitbarrc
-```
+ ```console
+ nano ~/.bitbarrc
+ ```
 
 6. And add the following configuration information, replace {your-company} with the company name that you can see on the url when you are logged-in in PagerDuty and replace {API-Token} with your API token.
 
-```
-[pagerdutyoncall]
-api.endpoint=https://{your-company}.pagerduty.com
-api.token={API-token}
-api.query=
-style.prefix=
-```
+ ```
+ [pagerdutyoncall]
+ api.endpoint=https://{your-company}.pagerduty.com
+ api.token={API-token}
+ api.query=
+ style.prefix=
+ ```
 
 7. Choose `Refresh` from one of the BitBar menus
 
