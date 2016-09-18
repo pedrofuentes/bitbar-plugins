@@ -9,6 +9,8 @@
   "globals": {
   },
   "rules": {
-    "no-use-before-define": [2, {"functions": false, "classes": true}]
+    "max-len": [2, 100, 2, {"ignoreComments": true, "ignoreUrls": true, "ignoreStrings": true, "ignoreTemplateLiterals": true}],
+    "no-use-before-define": [2, {"functions": false, "classes": true}],
+    "strict": [0, "function"]
   }
 }
