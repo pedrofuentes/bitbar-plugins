@@ -3,4 +3,4 @@ This repo has a collection of [BitBar](https://getbitbar.com/) plugins that I ex
 
 ##Plugin List
 * `PagerDuty On Call` - shows who is on call for all the active Escalation Policies and what services have active incidents.
-* `PagerDuty Incidents`- shows all the services with an active incident.
+* `PagerDuty Incidents`- shows all the active incidents grouped by Service.
