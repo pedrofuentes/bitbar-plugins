@@ -9,6 +9,8 @@
 <bitbar.dependencies>node, npm/node-fetch, npm/time-ago, npm/bitbar, node/home-config</bitbar.dependencies>
 <bitbar.abouturl>https://github.com/PedroFuentes/bitbar-plugins/tree/master/pagerDutyOnCall</bitbar.abouturl>
 
+Copyright(c) 2016 Pedro Fuentes <code@pedrofuent.es>
+MIT Licensed https://opensource.org/licenses/MIT
 */
 'use strict';
 const fetch = require('node-fetch');
