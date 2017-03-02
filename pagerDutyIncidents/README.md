@@ -5,7 +5,7 @@ Shows all the active incidents grouped by Service. If you click on a service, in
 
 ## Installation
 ### Prerequisites
-For the plugin to work you first need a [PagerDuty API key](https://support.pagerduty.com/hc/en-us/articles/202829310-Generating-an-API-Key).
+For the plugin to work you first need a [PagerDuty v1 API key](https://support.pagerduty.com/hc/en-us/articles/202829310-Generating-an-API-Key).
 
 ### Step by Step guide
 1. [Get the latest version of BitBar](https://github.com/matryer/bitbar/releases). Copy it to your Applications folder and run it - it will ask you to (create and) select a plugins folder, do so.
