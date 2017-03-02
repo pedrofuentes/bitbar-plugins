@@ -45,9 +45,9 @@ For the plugin to work you first need a [PagerDuty API key](https://support.page
 ## Configuration
 Aside of the required Endpoint and API Token you have the following options:
 
-`api.query` - will filter the available escalation policies by the provided query
+`api.query` (optional) - will filter the available escalation policies by the provided query
 
-`style.prefix` - will remove the provided prefix from the escalation policy name
+`style.prefix` (optional) - will remove the provided prefix from the escalation policy name
 
 ##Contributing
 If you find a bug or have a feature request please [submit an issue](https://github.com/PedroFuentes/bitbar-plugins/issues/new). If you want to contribute, fork the repo and when ready submit a Pull Request.
