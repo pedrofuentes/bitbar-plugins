@@ -62,7 +62,7 @@ const config = {
 };
 
 // TODO: load all available pages
-fetch(`${config.api.endpoint}/api/v1/incidents?${config.api.query}`, {
+fetch(`${config.api.endpoint}/incidents?${config.api.query}`, {
   method: 'GET',
   headers: {
     'Content-Type': 'application/json',
