@@ -11,7 +11,9 @@
 */
 /* MIT Licensed https://opensource.org/licenses/MIT */
 /* jshint esversion: 6 */
+
 'use strict';
+
 const fetch = require('node-fetch');
 const ta = require('time-ago')();
 const bitbar = require('bitbar');
@@ -67,7 +69,7 @@ fetch(`${config.api.endpoint}/api/v1/incidents?${config.api.query}`, {
     Authorization: `Token token=${config.api.token}`,
   },
 })
-  .then(res => res.json())
+  .then((res) => res.json())
   .then((json) => {
   // Group incidents by Service
     const serviceIncidents = [];
@@ -91,7 +93,7 @@ fetch(`${config.api.endpoint}/api/v1/incidents?${config.api.query}`, {
   })
   .then((obj) => {
     const json = [];
-    const serviceIncidents = obj.serviceIncidents;
+    const { serviceIncidents } = obj;
 
     json.push({
       text: `[${obj.total}]`,
