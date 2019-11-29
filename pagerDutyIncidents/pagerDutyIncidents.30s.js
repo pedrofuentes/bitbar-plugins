@@ -20,7 +20,7 @@ const bitbar = require('bitbar');
 
 const cfg = require('home-config').load('.bitbarrc');
 
-if (!cfg.pagerdutyincidents['api.endpoint'] || !cfg.pagerdutyincidents['api.token']) {
+if (!cfg.pagerdutyincidents || !cfg.pagerdutyincidents['api.endpoint'] || !cfg.pagerdutyincidents['api.token']) {
   const json = [];
 
   json.push({
