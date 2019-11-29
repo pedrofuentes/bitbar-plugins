@@ -75,74 +75,74 @@ fetch(`${config.api.endpoint}/api/v1/escalation_policies/on_call?limit=100&query
     Authorization: `Token token=${config.api.token}`,
   },
 })
-.then(res => res.json())
-.then((json) => {
-  const escalations = [];
-  let activeIncident = false;
+  .then(res => res.json())
+  .then((json) => {
+    const escalations = [];
+    let activeIncident = false;
 
-  json.escalation_policies.forEach((escalation) => {
-    let activeServiceIncident = false;
-    const services = [];
-    let activeServices = 0;
+    json.escalation_policies.forEach((escalation) => {
+      let activeServiceIncident = false;
+      const services = [];
+      let activeServices = 0;
 
-    escalation.services.forEach((service) => {
-      if (service.status !== 'disabled') {
-        activeServices += 1;
+      escalation.services.forEach((service) => {
+        if (service.status !== 'disabled') {
+          activeServices += 1;
 
-        if (service.status !== 'active') {
-          activeIncident = true;
-          activeServiceIncident = true;
+          if (service.status !== 'active') {
+            activeIncident = true;
+            activeServiceIncident = true;
 
-          services.push({
-            text: `${config.style.indentation}${service.status === 'maintenance' ? ':construction:' : ':bangbang:'} ${cleanName(service.name)}, ${ta.ago(new Date(Date.parse(service.last_incident_timestamp)))}`,
-            trim: false,
-            color: service.status === 'critical' ? config.colors.critical : config.colors.warning,
-            href: `${config.api.endpoint}${service.service_url}`,
+            services.push({
+              text: `${config.style.indentation}${service.status === 'maintenance' ? ':construction:' : ':bangbang:'} ${cleanName(service.name)}, ${ta.ago(new Date(Date.parse(service.last_incident_timestamp)))}`,
+              trim: false,
+              color: service.status === 'critical' ? config.colors.critical : config.colors.warning,
+              href: `${config.api.endpoint}${service.service_url}`,
+            }, {
+              text: `${config.style.indentation}:page_facing_up: Triggered: ${service.incident_counts.triggered} Acknowledged: ${service.incident_counts.acknowledged}`,
+              trim: false,
+              alternate: true,
+            });
+          }
+        }
+      });
+
+      if (activeServices) {
+        const onCallList = [];
+
+        escalation.on_call.forEach((onCall) => {
+          onCallList.push({
+            text: `${onCall.level}. ${onCall.user.name}`,
+            color: '#000000',
+            href: `${config.api.endpoint}/users/${onCall.user.id}`,
           }, {
-            text: `${config.style.indentation}:page_facing_up: Triggered: ${service.incident_counts.triggered} Acknowledged: ${service.incident_counts.acknowledged}`,
-            trim: false,
+            text: `${onCall.level}. ${onCall.user.email}`,
             alternate: true,
           });
-        }
+        });
+
+        escalations.push({
+          text: `${activeServiceIncident ? ':sos:' : ':cool:'} ${cleanName(escalation.name)}`,
+          href: `${config.api.endpoint}/escalation_policies/${escalation.id}`,
+          submenu: onCallList,
+        });
+
+        if (services.length) escalations.push(services[0]);
+
+        escalations.push(bitbar.sep);
       }
     });
 
-    if (activeServices) {
-      const onCallList = [];
+    escalations.unshift({
+      text: '☎',
+      dropdown: false,
+      templateImage: activeIncident ? config.icon.active : config.icon.inactive,
+      size: 8,
+    },
+    bitbar.sep);
 
-      escalation.on_call.forEach((onCall) => {
-        onCallList.push({
-          text: `${onCall.level}. ${onCall.user.name}`,
-          color: '#000000',
-          href: `${config.api.endpoint}/users/${onCall.user.id}`,
-        }, {
-          text: `${onCall.level}. ${onCall.user.email}`,
-          alternate: true,
-        });
-      });
-
-      escalations.push({
-        text: `${activeServiceIncident ? ':sos:' : ':cool:'} ${cleanName(escalation.name)}`,
-        href: `${config.api.endpoint}/escalation_policies/${escalation.id}`,
-        submenu: onCallList,
-      });
-
-      if (services.length) escalations.push(services[0]);
-
-      escalations.push(bitbar.sep);
-    }
+    bitbar(escalations);
   });
-
-  escalations.unshift({
-    text: '☎',
-    dropdown: false,
-    templateImage: activeIncident ? config.icon.active : config.icon.inactive,
-    size: 8,
-  },
-  bitbar.sep);
-
-  bitbar(escalations);
-});
 
 function cleanName(name) {
   return name.replace(`${config.style.prefix} - `, '').replace(config.style.prefix, '').trim();

@@ -67,100 +67,100 @@ fetch(`${config.api.endpoint}/api/v1/incidents?${config.api.query}`, {
     Authorization: `Token token=${config.api.token}`,
   },
 })
-.then(res => res.json())
-.then((json) => {
+  .then(res => res.json())
+  .then((json) => {
   // Group incidents by Service
-  const serviceIncidents = [];
+    const serviceIncidents = [];
 
-  json.incidents.forEach((incident) => {
-    if (!serviceIncidents[incident.service.id]) {
-      serviceIncidents[incident.service.id] = {
-        name: incident.service.name,
-        html_url: incident.service.html_url,
-        incidents: [],
-      };
-    }
+    json.incidents.forEach((incident) => {
+      if (!serviceIncidents[incident.service.id]) {
+        serviceIncidents[incident.service.id] = {
+          name: incident.service.name,
+          html_url: incident.service.html_url,
+          incidents: [],
+        };
+      }
 
-    serviceIncidents[incident.service.id].incidents.push(incident);
-  });
+      serviceIncidents[incident.service.id].incidents.push(incident);
+    });
 
-  return {
-    serviceIncidents,
-    total: json.incidents.length,
-  };
-})
-.then((obj) => {
-  const json = [];
-  const serviceIncidents = obj.serviceIncidents;
+    return {
+      serviceIncidents,
+      total: json.incidents.length,
+    };
+  })
+  .then((obj) => {
+    const json = [];
+    const serviceIncidents = obj.serviceIncidents;
 
-  json.push({
-    text: `[${obj.total}]`,
-    dropdown: false,
-    templateImage: config.icon.inactive,
-    size: 8,
-  },
-  bitbar.sep);
+    json.push({
+      text: `[${obj.total}]`,
+      dropdown: false,
+      templateImage: config.icon.inactive,
+      size: 8,
+    },
+    bitbar.sep);
 
-  if (Object.keys(serviceIncidents).length) {
-    Object.keys(serviceIncidents).forEach((prop) => {
-      const incidents = [];
+    if (Object.keys(serviceIncidents).length) {
+      Object.keys(serviceIncidents).forEach((prop) => {
+        const incidents = [];
 
-      serviceIncidents[prop].incidents.forEach((incident) => {
-        const assignedTo = [];
+        serviceIncidents[prop].incidents.forEach((incident) => {
+          const assignedTo = [];
 
-        incident.assigned_to.forEach((user) => {
-          assignedTo.push({
-            text: `${user.object.name}, ${ta.ago(new Date(Date.parse(user.at)))}`,
-            href: user.object.html_url,
+          incident.assigned_to.forEach((user) => {
+            assignedTo.push({
+              text: `${user.object.name}, ${ta.ago(new Date(Date.parse(user.at)))}`,
+              href: user.object.html_url,
+              color: config.colors.regularText,
+            }, {
+              text: user.object.email,
+              alternate: true,
+            });
+          });
+
+          incidents.push({
+            text: incident.incident_key,
+            length: 50,
+            href: incident.html_url,
+            color: incident.status === 'triggered' ? config.colors.critical : config.colors.warning,
+          }, {
+            text: incident.incident_key,
+            alternate: true,
+          }, {
+            text: 'Assigned To',
+            submenu: assignedTo,
+          }, {
+            text: `Created\t\t: ${ta.ago(new Date(Date.parse(incident.created_on)))}`,
             color: config.colors.regularText,
           }, {
-            text: user.object.email,
+            text: `Created at\t: ${incident.created_on}`,
             alternate: true,
+            color: config.colors.regularText,
+          }, {
+            text: `Status\t\t: ${incident.status}`,
+            color: config.colors.regularText,
+          }, {
+            text: `Urgency\t\t: ${incident.urgency}`,
+            color: config.colors.regularText,
+          }, {
+            text: `Escalations\t: ${incident.number_of_escalations}`,
+            color: config.colors.regularText,
           });
         });
 
-        incidents.push({
-          text: incident.incident_key,
-          length: 50,
-          href: incident.html_url,
-          color: incident.status === 'triggered' ? config.colors.critical : config.colors.warning,
-        }, {
-          text: incident.incident_key,
-          alternate: true,
-        }, {
-          text: 'Assigned To',
-          submenu: assignedTo,
-        }, {
-          text: `Created\t\t: ${ta.ago(new Date(Date.parse(incident.created_on)))}`,
-          color: config.colors.regularText,
-        }, {
-          text: `Created at\t: ${incident.created_on}`,
-          alternate: true,
-          color: config.colors.regularText,
-        }, {
-          text: `Status\t\t: ${incident.status}`,
-          color: config.colors.regularText,
-        }, {
-          text: `Urgency\t\t: ${incident.urgency}`,
-          color: config.colors.regularText,
-        }, {
-          text: `Escalations\t: ${incident.number_of_escalations}`,
-          color: config.colors.regularText,
-        });
+        json.push({
+          text: `${serviceIncidents[prop].name} (${serviceIncidents[prop].incidents.length})`,
+          href: serviceIncidents[prop].html_url,
+          submenu: incidents,
+        },
+        bitbar.sep);
       });
-
+    } else {
       json.push({
-        text: `${serviceIncidents[prop].name} (${serviceIncidents[prop].incidents.length})`,
-        href: serviceIncidents[prop].html_url,
-        submenu: incidents,
-      },
-      bitbar.sep);
-    });
-  } else {
-    json.push({
-      text: 'No Open Incidents',
-    });
-  }
+        text: 'No Open Incidents',
+      });
+    }
 
-  bitbar(json);
-});
+    bitbar(json);
+  });
