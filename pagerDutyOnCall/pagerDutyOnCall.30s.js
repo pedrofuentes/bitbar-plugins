@@ -11,7 +11,9 @@
 */
 /* MIT Licensed https://opensource.org/licenses/MIT */
 /* jshint esversion: 6 */
+
 'use strict';
+
 const fetch = require('node-fetch');
 const ta = require('time-ago')();
 const bitbar = require('bitbar');
@@ -75,7 +77,7 @@ fetch(`${config.api.endpoint}/api/v1/escalation_policies/on_call?limit=100&query
     Authorization: `Token token=${config.api.token}`,
   },
 })
-  .then(res => res.json())
+  .then((res) => res.json())
   .then((json) => {
     const escalations = [];
     let activeIncident = false;
