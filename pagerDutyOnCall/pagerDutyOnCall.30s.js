@@ -100,10 +100,6 @@ fetch(`${config.api.endpoint}/escalation_policies?limit=100&include[]=services&i
               trim: false,
               color: service.status === 'critical' ? config.colors.critical : config.colors.warning,
               href: `${config.api.endpoint}${service.service_url}`,
-            }, {
-              text: `${config.style.indentation}:page_facing_up: Triggered: ${service.incident_counts.triggered} Acknowledged: ${service.incident_counts.acknowledged}`,
-              trim: false,
-              alternate: true,
             });
           }
         }
