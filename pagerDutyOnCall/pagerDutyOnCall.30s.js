@@ -99,7 +99,7 @@ fetch(`${config.api.endpoint}/escalation_policies?limit=100&include[]=services&i
               text: `${config.style.indentation}${service.status === 'maintenance' ? ':construction:' : ':bangbang:'} ${cleanName(service.name)}, ${ta.ago(new Date(Date.parse(service.last_incident_timestamp)))}`,
               trim: false,
               color: service.status === 'critical' ? config.colors.critical : config.colors.warning,
-              href: `${config.api.endpoint}${service.service_url}`,
+              href: `${service.html_url}`,
             });
           }
         }
@@ -121,7 +121,7 @@ fetch(`${config.api.endpoint}/escalation_policies?limit=100&include[]=services&i
 
         escalations.push({
           text: `${activeServiceIncident ? ':sos:' : ':cool:'} ${cleanName(escalation.name)}`,
-          href: `${config.api.endpoint}/escalation_policies/${escalation.id}`,
+          href: `${escalation.html_url}`,
           submenu: onCallList,
         });
 
