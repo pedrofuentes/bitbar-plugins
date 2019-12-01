@@ -62,6 +62,7 @@ const config = {
     critical: '#FF0000',
     warning: '#999900',
     regularText: '#808080',
+    onCallText: !process.env.BitBarDarkMode || process.env.BitBarDarkMode === 0 ? '#000000' : '#FFFFFF',
   },
   style: {
     indentation: '      ',
@@ -112,7 +113,7 @@ fetch(`${config.api.endpoint}/escalation_policies?limit=100&include[]=services&i
         escalation.on_call.forEach((onCall) => {
           onCallList.push({
             text: `${onCall.level}. ${onCall.user.name}`,
-            color: '#000000',
+            color: config.colors.onCallText,
             href: `https://${htmlDomain}/users/${onCall.user.id}`,
           }, {
             text: `${onCall.level}. ${onCall.user.email}`,
