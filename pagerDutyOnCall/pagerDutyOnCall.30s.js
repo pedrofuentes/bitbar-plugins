@@ -86,6 +86,7 @@ fetch(`${config.api.endpoint}/escalation_policies?limit=100&include[]=services&i
       let activeServiceIncident = false;
       const services = [];
       let activeServices = 0;
+      const htmlDomain = getHostName(escalation.html_url);
 
       escalation.services.forEach((service) => {
         if (service.status !== 'disabled') {
@@ -112,7 +113,7 @@ fetch(`${config.api.endpoint}/escalation_policies?limit=100&include[]=services&i
           onCallList.push({
             text: `${onCall.level}. ${onCall.user.name}`,
             color: '#000000',
-            href: `${config.api.endpoint}/users/${onCall.user.id}`,
+            href: `https://${htmlDomain}/users/${onCall.user.id}`,
           }, {
             text: `${onCall.level}. ${onCall.user.email}`,
             alternate: true,
@@ -144,4 +145,12 @@ fetch(`${config.api.endpoint}/escalation_policies?limit=100&include[]=services&i
 
 function cleanName(name) {
   return name.replace(`${config.style.prefix} - `, '').replace(config.style.prefix, '').trim();
+}
+
+function getHostName(url) {
+  const match = url.match(/:\/\/(www[0-9]?\.)?(.[^/:]+)/i);
+  if (match != null && match.length > 2 && typeof match[2] === 'string' && match[2].length > 0) {
+    return match[2];
+  }
+  return null;
 }
