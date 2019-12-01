@@ -70,7 +70,7 @@ const config = {
 };
 
 // TODO: Add support more than 100 escalations
-fetch(`${config.api.endpoint}/api/v1/escalation_policies/on_call?limit=100&query=${config.api.query}`, {
+fetch(`${config.api.endpoint}/escalation_policies?limit=100&include[]=services&include[]=teams&include[]=oncall&query=${config.api.query}`, {
   method: 'GET',
   headers: {
     'Content-Type': 'application/json',
