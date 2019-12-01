@@ -21,7 +21,7 @@ For the plugin to work you first need a [PagerDuty v1 API key](https://support.p
 4. Install the required npm dependencies, if you don't have Node.js installed follow [this installation guide](https://docs.npmjs.com/getting-started/installing-node) and after you are done with the installation open your terminal, go to your BitBar plugins folder and then type
 
  ```console
- npm install bitbar@^0.3.0 home-config@^0.1.0 node-fetch@^1.5.2 time-ago@^0.1.0
+ echo 'package-lock=false' >> .npmrc && npm install bitbar@^0.3.0 home-config@^0.1.0 node-fetch@^1.5.2 time-ago@^0.1.0
  ```
 
 5. Create the required configuration file on your home directory
