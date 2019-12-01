@@ -1,7 +1,7 @@
 #!/usr/bin/env /usr/local/bin/node
 /*
 <bitbar.title>PagerDuty On-Call</bitbar.title>
-<bitbar.version>v0.1.0</bitbar.version>
+<bitbar.version>v0.2.0</bitbar.version>
 <bitbar.author>Pedro Pablo Fuentes Schuster</bitbar.author>
 <bitbar.author.github>pedrofuentes</bitbar.author.github>
 <bitbar.desc>Shows who is on call for all the active Escalation Policies and what services have active incidents. For installation instructions check https://github.com/PedroFuentes/bitbar-plugins/blob/master/pagerDutyOnCall/README.md</bitbar.desc>

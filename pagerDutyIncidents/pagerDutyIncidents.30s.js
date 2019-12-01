@@ -1,7 +1,7 @@
 #!/usr/bin/env /usr/local/bin/node
 /*
 <bitbar.title>PagerDuty Incidents</bitbar.title>
-<bitbar.version>v0.1.0</bitbar.version>
+<bitbar.version>v0.2.0</bitbar.version>
 <bitbar.author>Pedro Pablo Fuentes Schuster</bitbar.author>
 <bitbar.author.github>pedrofuentes</bitbar.author.github>
 <bitbar.desc>Shows all the active incidents grouped by Service. For installation instructions check https://github.com/PedroFuentes/bitbar-plugins/blob/master/pagerDutyIncidents/README.md</bitbar.desc>
