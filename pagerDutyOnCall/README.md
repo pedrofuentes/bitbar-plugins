@@ -34,7 +34,7 @@ For the plugin to work you first need a [PagerDuty v2 API key](https://support.p
 
  ```
  [pagerdutyoncall]
- api.endpoint=https://{your-company}.pagerduty.com
+ api.endpoint=https://api.pagerduty.com
  api.token={API-token}
  api.query=
  style.prefix=
