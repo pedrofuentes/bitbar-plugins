@@ -11,14 +11,16 @@
 */
 /* MIT Licensed https://opensource.org/licenses/MIT */
 /* jshint esversion: 6 */
+
 'use strict';
+
 const fetch = require('node-fetch');
 const ta = require('time-ago')();
 const bitbar = require('bitbar');
 
 const cfg = require('home-config').load('.bitbarrc');
 
-if (!cfg.pagerdutyoncall['api.endpoint'] || !cfg.pagerdutyoncall['api.token']) {
+if (!cfg.pagerdutyoncall || !cfg.pagerdutyoncall['api.endpoint'] || !cfg.pagerdutyoncall['api.token']) {
   const json = [];
 
   json.push({
@@ -60,6 +62,7 @@ const config = {
     critical: '#FF0000',
     warning: '#999900',
     regularText: '#808080',
+    onCallText: !process.env.BitBarDarkMode || process.env.BitBarDarkMode === 0 ? '#000000' : '#FFFFFF',
   },
   style: {
     indentation: '      ',
@@ -68,14 +71,14 @@ const config = {
 };
 
 // TODO: Add support more than 100 escalations
-fetch(`${config.api.endpoint}/api/v1/escalation_policies/on_call?limit=100&query=${config.api.query}`, {
+fetch(`${config.api.endpoint}/escalation_policies?limit=100&include[]=services&include[]=teams&include[]=oncall&query=${config.api.query}`, {
   method: 'GET',
   headers: {
     'Content-Type': 'application/json',
     Authorization: `Token token=${config.api.token}`,
   },
 })
-  .then(res => res.json())
+  .then((res) => res.json())
   .then((json) => {
     const escalations = [];
     let activeIncident = false;
@@ -84,6 +87,7 @@ fetch(`${config.api.endpoint}/api/v1/escalation_policies/on_call?limit=100&query
       let activeServiceIncident = false;
       const services = [];
       let activeServices = 0;
+      const htmlDomain = getHostName(escalation.html_url);
 
       escalation.services.forEach((service) => {
         if (service.status !== 'disabled') {
@@ -97,11 +101,7 @@ fetch(`${config.api.endpoint}/api/v1/escalation_policies/on_call?limit=100&query
               text: `${config.style.indentation}${service.status === 'maintenance' ? ':construction:' : ':bangbang:'} ${cleanName(service.name)}, ${ta.ago(new Date(Date.parse(service.last_incident_timestamp)))}`,
               trim: false,
               color: service.status === 'critical' ? config.colors.critical : config.colors.warning,
-              href: `${config.api.endpoint}${service.service_url}`,
-            }, {
-              text: `${config.style.indentation}:page_facing_up: Triggered: ${service.incident_counts.triggered} Acknowledged: ${service.incident_counts.acknowledged}`,
-              trim: false,
-              alternate: true,
+              href: `${service.html_url}`,
             });
           }
         }
@@ -113,8 +113,8 @@ fetch(`${config.api.endpoint}/api/v1/escalation_policies/on_call?limit=100&query
         escalation.on_call.forEach((onCall) => {
           onCallList.push({
             text: `${onCall.level}. ${onCall.user.name}`,
-            color: '#000000',
-            href: `${config.api.endpoint}/users/${onCall.user.id}`,
+            color: config.colors.onCallText,
+            href: `https://${htmlDomain}/users/${onCall.user.id}`,
           }, {
             text: `${onCall.level}. ${onCall.user.email}`,
             alternate: true,
@@ -123,7 +123,7 @@ fetch(`${config.api.endpoint}/api/v1/escalation_policies/on_call?limit=100&query
 
         escalations.push({
           text: `${activeServiceIncident ? ':sos:' : ':cool:'} ${cleanName(escalation.name)}`,
-          href: `${config.api.endpoint}/escalation_policies/${escalation.id}`,
+          href: `${escalation.html_url}`,
           submenu: onCallList,
         });
 
@@ -146,4 +146,12 @@ fetch(`${config.api.endpoint}/api/v1/escalation_policies/on_call?limit=100&query
 
 function cleanName(name) {
   return name.replace(`${config.style.prefix} - `, '').replace(config.style.prefix, '').trim();
+}
+
+function getHostName(url) {
+  const match = url.match(/:\/\/(www[0-9]?\.)?(.[^/:]+)/i);
+  if (match != null && match.length > 2 && typeof match[2] === 'string' && match[2].length > 0) {
+    return match[2];
+  }
+  return null;
 }

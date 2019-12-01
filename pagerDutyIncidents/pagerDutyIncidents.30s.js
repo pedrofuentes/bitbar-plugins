@@ -11,14 +11,16 @@
 */
 /* MIT Licensed https://opensource.org/licenses/MIT */
 /* jshint esversion: 6 */
+
 'use strict';
+
 const fetch = require('node-fetch');
 const ta = require('time-ago')();
 const bitbar = require('bitbar');
 
 const cfg = require('home-config').load('.bitbarrc');
 
-if (!cfg.pagerdutyincidents['api.endpoint'] || !cfg.pagerdutyincidents['api.token']) {
+if (!cfg.pagerdutyincidents || !cfg.pagerdutyincidents['api.endpoint'] || !cfg.pagerdutyincidents['api.token']) {
   const json = [];
 
   json.push({
@@ -46,7 +48,7 @@ const config = {
   api: {
     endpoint: cfg.pagerdutyincidents['api.endpoint'],
     token: cfg.pagerdutyincidents['api.token'],
-    query: cfg.pagerdutyincidents['api.query'] ? cfg.pagerdutyincidents['api.query'] : 'limit=100&status=triggered,acknowledged',
+    query: cfg.pagerdutyincidents['api.query'] ? cfg.pagerdutyincidents['api.query'] : 'limit=100&statuses[]=triggered&statuses[]=acknowledged',
   },
   icon: {
     active: 'iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBNYWNpbnRvc2giIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6REEwQjNEREYxNjBCMTFFNjgyODVBMzc1NTdCRDNBRUYiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6REEwQjNERTAxNjBCMTFFNjgyODVBMzc1NTdCRDNBRUYiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDpEQTBCM0RERDE2MEIxMUU2ODI4NUEzNzU1N0JEM0FFRiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDpEQTBCM0RERTE2MEIxMUU2ODI4NUEzNzU1N0JEM0FFRiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/Pv4ywmgAAADTSURBVHja1NOtCgJBFIbhGX8QNYkGg6jFm7CZNXodglGL1RsQMQsmjUaTyWYzWAzGFfxji+L6LpyFYZmybBAHnrDLme8MZ3a1UspTMVZCxVw/Cdjgar7wIqpiFzynQulbrPBBGT1kMMUJfv0FyWCDGXBDF02UMIOLGkbo4I0XtC3Akc4LZDHGHg+0MZe6ugRZh5gw042lQzNTthP4m+/oI4+1dK5giSGeMoOCLUBLuiNFLQyQwxkHqZugYbvGowzPjXKt5gyK0jEd5avS//8zfQUYAGZtQSNj7zxTAAAAAElFTkSuQmCC',
@@ -60,14 +62,14 @@ const config = {
 };
 
 // TODO: load all available pages
-fetch(`${config.api.endpoint}/api/v1/incidents?${config.api.query}`, {
+fetch(`${config.api.endpoint}/incidents?${config.api.query}`, {
   method: 'GET',
   headers: {
     'Content-Type': 'application/json',
     Authorization: `Token token=${config.api.token}`,
   },
 })
-  .then(res => res.json())
+  .then((res) => res.json())
   .then((json) => {
   // Group incidents by Service
     const serviceIncidents = [];
@@ -75,7 +77,7 @@ fetch(`${config.api.endpoint}/api/v1/incidents?${config.api.query}`, {
     json.incidents.forEach((incident) => {
       if (!serviceIncidents[incident.service.id]) {
         serviceIncidents[incident.service.id] = {
-          name: incident.service.name,
+          name: incident.service.summary,
           html_url: incident.service.html_url,
           incidents: [],
         };
@@ -91,7 +93,7 @@ fetch(`${config.api.endpoint}/api/v1/incidents?${config.api.query}`, {
   })
   .then((obj) => {
     const json = [];
-    const serviceIncidents = obj.serviceIncidents;
+    const { serviceIncidents } = obj;
 
     json.push({
       text: `[${obj.total}]`,
@@ -108,33 +110,33 @@ fetch(`${config.api.endpoint}/api/v1/incidents?${config.api.query}`, {
         serviceIncidents[prop].incidents.forEach((incident) => {
           const assignedTo = [];
 
-          incident.assigned_to.forEach((user) => {
+          incident.assignments.forEach((user) => {
             assignedTo.push({
-              text: `${user.object.name}, ${ta.ago(new Date(Date.parse(user.at)))}`,
-              href: user.object.html_url,
+              text: `${user.assignee.summary}, ${ta.ago(new Date(Date.parse(user.at)))}`,
+              href: user.assignee.html_url,
               color: config.colors.regularText,
             }, {
-              text: user.object.email,
+              text: user.assignee.html_url,
               alternate: true,
             });
           });
 
           incidents.push({
-            text: incident.incident_key,
+            text: incident.title,
             length: 50,
             href: incident.html_url,
             color: incident.status === 'triggered' ? config.colors.critical : config.colors.warning,
           }, {
-            text: incident.incident_key,
+            text: incident.title,
             alternate: true,
           }, {
             text: 'Assigned To',
             submenu: assignedTo,
           }, {
-            text: `Created\t\t: ${ta.ago(new Date(Date.parse(incident.created_on)))}`,
+            text: `Created\t\t: ${ta.ago(new Date(Date.parse(incident.created_at)))}`,
             color: config.colors.regularText,
           }, {
-            text: `Created at\t: ${incident.created_on}`,
+            text: `Created at\t: ${incident.created_at}`,
             alternate: true,
             color: config.colors.regularText,
           }, {
@@ -144,7 +146,7 @@ fetch(`${config.api.endpoint}/api/v1/incidents?${config.api.query}`, {
             text: `Urgency\t\t: ${incident.urgency}`,
             color: config.colors.regularText,
           }, {
-            text: `Escalations\t: ${incident.number_of_escalations}`,
+            text: `Escalations\t: ${incident.alert_counts.all}`,
             color: config.colors.regularText,
           });
         });
