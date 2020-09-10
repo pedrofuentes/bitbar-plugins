@@ -17,7 +17,7 @@
   "dependencies": {
     "bitbar": "^0.3.0",
     "home-config": "^0.1.0",
-    "node-fetch": "^1.5.2",
+    "node-fetch": "^2.6.1",
     "time-ago": "^0.1.0"
   },
   "devDependencies": {
